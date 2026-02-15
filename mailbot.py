@@ -6,9 +6,6 @@ from email.mime.image import MIMEImage
 from email import encoders
 import os
 
-print("commit için deneme")
-
-
 gonderen_mail = "burakkaya.imk@gmail.com"  # gönderen mail
 uygulama_sifresi = os.getenv("SIFRE")  # 16 haneli uygulama şifresi
 konu = "İTÜ İMK | Networking Time Etkinliği hk."  # hakkında kısmı
