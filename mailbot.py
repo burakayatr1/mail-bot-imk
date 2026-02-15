@@ -6,13 +6,15 @@ from email.mime.image import MIMEImage
 from email import encoders
 import os
 
-gonderen_mail = "burakkaya.imk@gmail.com" #gönderen mail
-uygulama_sifresi = os.getenv("SIFRE") # 16 haneli uygulama şifresi
-konu = "İTÜ İMK | Networking Time Etkinliği hk." #hakkında kısmı
-dosya_yolu = r"C:\Users\ASUS\Downloads\NT_sunum.pdf" #sunum dosyası
-logo_yolu = r"C:\Users\ASUS\Downloads\logo.png" #imza logo
-linkedin_link = "https://www.linkedin.com/in/user_name/" #linkedin link
-title = "Networking Time Koordinatörü"  #title
+print("asdjl")
+
+gonderen_mail = "burakkaya.imk@gmail.com"  # gönderen mail
+uygulama_sifresi = os.getenv("SIFRE")  # 16 haneli uygulama şifresi
+konu = "İTÜ İMK | Networking Time Etkinliği hk."  # hakkında kısmı
+dosya_yolu = r"C:\Users\ASUS\Downloads\NT_sunum.pdf"  # sunum dosyası
+logo_yolu = r"C:\Users\ASUS\Downloads\logo.png"  # imza logo
+linkedin_link = "https://www.linkedin.com/in/user_name/"  # linkedin link
+title = "Networking Time Koordinatörü"  # title
 
 kullanicilar = {
     "melisdincer.imk@gmail.com": ["Melis", "Hanım"],
@@ -68,35 +70,41 @@ html_icerik = """
 </html>
 """
 
+
 def mail_gonder():
     try:
-        server = smtplib.SMTP('smtp.gmail.com', 587)
+        server = smtplib.SMTP("smtp.gmail.com", 587)
         server.starttls()
         server.login(gonderen_mail, uygulama_sifresi)
 
         for mail, bilgiler in kullanicilar.items():
             isim, hitap = bilgiler[0], bilgiler[1]
-            msg = MIMEMultipart('related')
-            msg['From'] = gonderen_mail
-            msg['To'] = mail
-            msg['Subject'] = konu
+            msg = MIMEMultipart("related")
+            msg["From"] = gonderen_mail
+            msg["To"] = mail
+            msg["Subject"] = konu
 
-            msg_alternative = MIMEMultipart('alternative')
+            msg_alternative = MIMEMultipart("alternative")
             msg.attach(msg_alternative)
-            msg_alternative.attach(MIMEText(html_icerik.format(isim=isim, hitap=hitap), 'html'))
+            msg_alternative.attach(
+                MIMEText(html_icerik.format(isim=isim, hitap=hitap), "html")
+            )
 
             if os.path.exists(logo_yolu):
-                with open(logo_yolu, 'rb') as f:
+                with open(logo_yolu, "rb") as f:
                     img = MIMEImage(f.read())
-                    img.add_header('Content-ID', '<logo_resmi>')
+                    img.add_header("Content-ID", "<logo_resmi>")
                     msg.attach(img)
 
             if os.path.exists(dosya_yolu):
                 with open(dosya_yolu, "rb") as ek:
-                    part = MIMEBase('application', 'octet-stream')
+                    part = MIMEBase("application", "octet-stream")
                     part.set_payload(ek.read())
                     encoders.encode_base64(part)
-                    part.add_header('Content-Disposition', f"attachment; filename={os.path.basename(dosya_yolu)}")
+                    part.add_header(
+                        "Content-Disposition",
+                        f"attachment; filename={os.path.basename(dosya_yolu)}",
+                    )
                     msg.attach(part)
 
             server.send_message(msg)
@@ -106,6 +114,7 @@ def mail_gonder():
         print("İşlem tamam!")
     except Exception as e:
         print(f"Hata: {e}")
+
 
 if __name__ == "__main__":
     mail_gonder()
